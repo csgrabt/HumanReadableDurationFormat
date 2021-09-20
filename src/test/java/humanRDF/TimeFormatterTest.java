@@ -54,7 +54,7 @@ class TimeFormatterTest {
     @Test
     void differentTimes() {
         assertEquals("1 hour, 1 minute and 2 seconds", TimeFormatter.formatDuration(3662));
-        assertEquals("2 years, 10 days, 3 hours, 45 minute and 2 seconds", TimeFormatter.formatDuration(63_949_345));
+        assertEquals("2 years, 10 days, 3 hours, 45 minute and 25 seconds", TimeFormatter.formatDuration(63_949_345));
     }
 
 }

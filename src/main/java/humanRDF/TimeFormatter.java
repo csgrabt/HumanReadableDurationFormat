@@ -22,24 +22,23 @@ public class TimeFormatter {
             return "now";
         }
 
-        Map<String, Integer> date = getDate(numberToBeConverted);
+        Map<Units, Integer> date = getDate(numberToBeConverted);
         deleteZeroValue(date);
 
         return dateFromMap(date);
     }
 
-    private static Map<String, Integer> getDate(int numberToBeConverted) {
-        Map<String, Integer> date = new HashMap<>();
-
+    private static Map<Units, Integer> getDate(int numberToBeConverted) {
+        Map<Units, Integer> date = new HashMap<>();
 
         for (int i = 0; i < ConvertNumbers.values().length; i++) {
             int convertNumber = ConvertNumbers.values()[i].getConvertNumber();
-            String unit = NameOfUnits.values()[i].getNameOfTheUnit();
+            Units unit = Units.values()[i];
             date.put(unit, numberToBeConverted / convertNumber);
             numberToBeConverted = numberToBeConverted % convertNumber;
 
             if (i == ConvertNumbers.values().length - 1) {
-                date.put(NameOfUnits.values()[i + 1].getNameOfTheUnit(), numberToBeConverted);
+                date.put(Units.values()[i + 1], numberToBeConverted);
 
             }
         }
@@ -47,45 +46,55 @@ public class TimeFormatter {
     }
 
 
-    private static void deleteZeroValue(Map<String, Integer> date) {
-        NameOfUnits[] nameOfUnits = NameOfUnits.values();
+    private static void deleteZeroValue(Map<Units, Integer> date) {
+        Units[] units = Units.values();
 
-        for (int i = 0; i < nameOfUnits.length; i++) {
-            if (date.get(nameOfUnits[i].getNameOfTheUnit()) == 0) {
-                date.remove(nameOfUnits[i].getNameOfTheUnit());
+        for (int i = 0; i < units.length; i++) {
+            if (date.get(units[i].getNameOfTheUnit()) == 0) {
+                date.remove(units[i].getNameOfTheUnit());
             }
         }
 
     }
 
 
-    private static String dateFromMap(Map<String, Integer> date) {
-        List<String> keys = new ArrayList<>(date.keySet());
+    private static String dateFromMap(Map<Units, Integer> date) {
+
+      //  List<Units> keys = new ArrayList<>(date.keySet());
+       Units[] units =  Units.values();
 
         StringBuilder sb = new StringBuilder();
 
-        String sb1 = justOneUnitHasValue(date, keys, sb);
+        String sb1 = justOneUnitHasValue(date, units, sb);
         if (sb1 != null) return sb1;
 
 
-        for (int i = 0; i < keys.size(); i++) {
+        for (int i = 0; i < units.length; i++) {
 
-            if (date.get(keys.get(i)) == 1) {
-                sb.append(date.get(keys.get(i)));
+            sb.append(date.get(units[i])).append(" ").append(units[i]);
 
+
+            if (date.get(units[i]) != 1) {
+                sb.append("s");
             }
 
+            if (i < units.length - 2) {
+                sb.append(COMMON_REGEX);
+            }
+            if (i == units.length - 2) {
+                sb.append(FINAL_REGEX);
+            }
         }
 
 
-        return null;
+        return sb.toString();
     }
 
-    private static String justOneUnitHasValue(Map<String, Integer> date, List<String> keys, StringBuilder sb) {
-        if (keys.size() == 1) {
-            sb.append(date.get(keys.get(0)));
-            sb.append(" ").append(keys.get(0));
-            if (date.get(keys.get(0)) != 1) {
+    private static String justOneUnitHasValue(Map<Units, Integer> date, Units[] unit, StringBuilder sb) {
+        if (unit.length == 1) {
+            sb.append(date.get(unit[0]));
+            sb.append(" ").append(unit[0]);
+            if (date.get(unit[0]) != 1) {
                 sb.append("s");
             }
             return sb.toString();
