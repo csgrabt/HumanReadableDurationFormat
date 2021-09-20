@@ -5,5 +5,10 @@ https://www.codewars.com/kata/human-readable-duration-format?utm_source=newslett
 */
 
 
-public class HumanReadableDurationFormat {
+public class TimeFormatter {
+
+
+    public static String formatDuration(int i) {
+        return null;
+    }
 }
