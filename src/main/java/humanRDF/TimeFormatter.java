@@ -7,6 +7,8 @@ https://www.codewars.com/kata/human-readable-duration-format?utm_source=newslett
 
 import java.util.*;
 
+import static humanRDF.TimeConverter.getTheDateInAMap;
+
 
 public class TimeFormatter {
 
@@ -19,44 +21,17 @@ public class TimeFormatter {
         if (numberToBeConverted == 0) {
             return "now";
         }
-        Map<Units, Integer> result = getTheDateInAMap(numberToBeConverted);
-
-        return toString(result);
+        Map<Units, Integer> readableDate = getTheDateInAMap(numberToBeConverted);
+        return toString(readableDate);
     }
 
-    private static Map<Units, Integer> getTheDateInAMap(int numberToBeConverted) {
 
-        Map<Units, Integer> date = new TreeMap<>();
-
-        List<Units> units = Arrays.stream(Units.values()).toList();
-
-        getTheYearAndPutItInTheMap(date, units, numberToBeConverted / units.get(0).getConvertNumberToSecond(), 0);
-        for (int i = 1; i < units.size(); i++) {
-            fillTheMap(numberToBeConverted, date, units, i);
-        }
-
-
-        return date;
-    }
-
-    private static void getTheYearAndPutItInTheMap(Map<Units, Integer> date, List<Units> units, int i2, int i3) {
-        if ((i2) != 0) {
-            date.put(units.get(i3), i2);
-        }
-    }
-
-    private static void fillTheMap(int numberToBeConverted, Map<Units, Integer> date, List<Units> units, int i) {
-        int value = (numberToBeConverted % units.get(i - 1).getConvertNumberToSecond()) / units.get(i).getConvertNumberToSecond();
-        getTheYearAndPutItInTheMap(date, units, value, i);
-
-    }
 
     private static void validator(int i) {
         if (i < 0) {
             throw new IllegalTimeFormatException("Time cannot be negative!");
         }
     }
-
 
     private static String toString(Map<Units, Integer> map) {
         List<Units> units = map.keySet().stream().toList();
