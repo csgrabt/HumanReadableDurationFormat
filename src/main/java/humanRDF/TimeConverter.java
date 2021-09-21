@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 public class TimeConverter {
 
-    private static List<Units> units = Arrays.stream(Units.values()).toList();
+    private final static List<Units> units = Arrays.stream(Units.values()).toList();
 
     public static Map<Units, Integer> getTheDateInAMap(int numberToBeConverted) {
         Map<Units, Integer> readableDate = new TreeMap<>();

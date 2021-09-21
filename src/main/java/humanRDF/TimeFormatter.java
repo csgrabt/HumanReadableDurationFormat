@@ -14,17 +14,22 @@ public class TimeFormatter {
 
     public final static String COMMON_REGEX = ", ";
     public final static String FINAL_REGEX = " and ";
+    public final static String THE_NUMBER_OF_SECOND_IS_ZERO = "now";
 
 
     public static String formatDuration(int numberToBeConverted) {
         validator(numberToBeConverted);
-        if (numberToBeConverted == 0) {
-            return "now";
-        }
+
+        if (isTheNumberToBeConvertedZero(numberToBeConverted)) return THE_NUMBER_OF_SECOND_IS_ZERO;
+
         Map<Units, Integer> readableDate = getTheDateInAMap(numberToBeConverted);
-        return toString(readableDate);
+
+        return toStringFromMap(readableDate);
     }
 
+    private static boolean isTheNumberToBeConvertedZero(int numberToBeConverted) {
+        return numberToBeConverted == 0;
+    }
 
 
     private static void validator(int i) {
@@ -33,33 +38,51 @@ public class TimeFormatter {
         }
     }
 
-    private static String toString(Map<Units, Integer> map) {
-        List<Units> units = map.keySet().stream().toList();
-        StringBuilder sb = new StringBuilder();
-
-        String sb1 = oneUnitOnly(map, units, sb);
-        if (!sb.isEmpty()) return sb1;
-
-        for (int i = 0; i < units.size() - 1; i++) {
-
-            sb.append(String.format("%d %s", map.get(units.get(i)),
-                    (map.get(units.get(i)) == 1) ? units.get(i).getNameOfTheUnit() : units.get(i).getNameOfTheUnit() + "s"));
-            if (i < units.size() - 2)
-                sb.append(COMMON_REGEX);
+    private static String toStringFromMap(Map<Units, Integer> map) {
+        StringBuilder stringBuilder = new StringBuilder();
+        List<Units> unitsFromMap = getUnitsFromMap(map);
+        String justOneValueIsNotZero = oneUnitOnly(map, stringBuilder);
+        if (!stringBuilder.isEmpty()) {
+            return justOneValueIsNotZero;
         }
-        sb.append(FINAL_REGEX).append(String.format("%d %s", map.get(units.get(units.size() - 1)),
-                (map.get(units.get(units.size() - 1)) == 1) ? units.get(units.size() - 1)
-                        .getNameOfTheUnit() : units.get(units.size() - 1).getNameOfTheUnit() + "s"));
-        return sb.toString();
+        appendUnitWithCommonRegex(map, stringBuilder, unitsFromMap);
+        stringBuilder.append(FINAL_REGEX);
+        appendUnit(map, stringBuilder, unitsFromMap.size() - 1);
+
+        return stringBuilder.toString();
     }
 
-    private static String oneUnitOnly(Map<Units, Integer> map, List<Units> units, StringBuilder sb) {
-        if (units.size() == 1) {
-            sb.append(String.format("%d %s", map.get(units.get(0)),
-                    (map.get(units.get(0)) == 1) ? units.get(0).getNameOfTheUnit() : units.get(0).getNameOfTheUnit() + "s"));
+    private static void appendUnitWithCommonRegex(Map<Units, Integer> map, StringBuilder stringBuilder, List<Units> fromMap) {
+        for (int i = 0; i < fromMap.size() - 1; i++) {
+            appendUnit(map, stringBuilder, i);
+            appendCommonRegex(fromMap, stringBuilder, i);
+        }
+    }
+
+    private static List<Units> getUnitsFromMap(Map<Units, Integer> map) {
+        return map.keySet().stream().toList();
+    }
+
+    private static void appendUnit(Map<Units, Integer> map, StringBuilder stringBuilder, int indexOfUnit) {
+        List<Units> unitsFromMap = getUnitsFromMap(map);
+        stringBuilder.append(String.format("%d %s", map.get(unitsFromMap.get(indexOfUnit)),
+                (map.get(unitsFromMap.get(indexOfUnit)) == 1) ? unitsFromMap.get(indexOfUnit)
+                        .getNameOfTheUnit() : unitsFromMap.get(indexOfUnit).getNameOfTheUnit() + "s"));
+    }
+
+    private static void appendCommonRegex(List<Units> units, StringBuilder stringBuilder, int indexOfUnit) {
+        if (indexOfUnit < units.size() - 2) {
+            stringBuilder.append(COMMON_REGEX);
+        }
+    }
+
+    private static String oneUnitOnly(Map<Units, Integer> map, StringBuilder stringBuilder) {
+        List<Units> unitsFromMap = getUnitsFromMap(map);
+        if (unitsFromMap.size() == 1) {
+            appendUnit(map, stringBuilder, 0);
         }
 
-        return sb.toString();
+        return stringBuilder.toString();
     }
 }
 
