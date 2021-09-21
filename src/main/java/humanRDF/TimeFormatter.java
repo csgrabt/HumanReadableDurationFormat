@@ -19,20 +19,18 @@ public class TimeFormatter {
         if (numberToBeConverted == 0) {
             return "now";
         }
-        Map<Units, Integer> result = dayGenerator(numberToBeConverted);
+        Map<Units, Integer> result = getTheDateInAMap(numberToBeConverted);
 
         return toString(result);
     }
 
-    private static Map<Units, Integer> dayGenerator(int numberToBeConverted) {
+    private static Map<Units, Integer> getTheDateInAMap(int numberToBeConverted) {
 
         Map<Units, Integer> date = new TreeMap<>();
 
         List<Units> units = Arrays.stream(Units.values()).toList();
 
-        if ((numberToBeConverted / units.get(0).getConvertNumberToSecond()) != 0) {
-            date.put(units.get(0), numberToBeConverted / units.get(0).getConvertNumberToSecond());
-        }
+        getTheYearAndPutItInTheMap(date, units, numberToBeConverted / units.get(0).getConvertNumberToSecond(), 0);
         for (int i = 1; i < units.size(); i++) {
             fillTheMap(numberToBeConverted, date, units, i);
         }
@@ -41,11 +39,15 @@ public class TimeFormatter {
         return date;
     }
 
+    private static void getTheYearAndPutItInTheMap(Map<Units, Integer> date, List<Units> units, int i2, int i3) {
+        if ((i2) != 0) {
+            date.put(units.get(i3), i2);
+        }
+    }
+
     private static void fillTheMap(int numberToBeConverted, Map<Units, Integer> date, List<Units> units, int i) {
         int value = (numberToBeConverted % units.get(i - 1).getConvertNumberToSecond()) / units.get(i).getConvertNumberToSecond();
-        if (value != 0) {
-            date.put(units.get(i), value);
-        }
+        getTheYearAndPutItInTheMap(date, units, value, i);
 
     }
 
