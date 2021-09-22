@@ -1,10 +1,5 @@
 package humanRDF;
 
-/*
-https://www.codewars.com/kata/human-readable-duration-format?utm_source=newsletter&utm_medium=email&utm_campaign=java_fejleszto_probafeladat&utm_term=2021-09-20
-*/
-
-
 import java.util.*;
 
 import static humanRDF.TimeConverterUtils.getTheDateInAMap;
@@ -40,48 +35,48 @@ public class TimeFormatter {
     }
 
     private static String toStringFromMap(Map<Units, Integer> readableDate) {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder humanReadableDate = new StringBuilder();
         List<Units> unitsFromMap = getUnitsFromMap(readableDate);
-        appendIfOnlyOneUnitValuePairInTheMap(readableDate, stringBuilder);
-        if (!stringBuilder.isEmpty()) {
-            return stringBuilder.toString();
+        appendIfOnlyOneUnitValuePairInTheMap(readableDate, humanReadableDate);
+        if (!humanReadableDate.isEmpty()) {
+            return humanReadableDate.toString();
         }
-        appendUnitAndValueWithCommonSeparator(readableDate, stringBuilder);
-        stringBuilder.append(FINAL_SEPARATOR);
-        appendUnitAndValue(readableDate, stringBuilder, unitsFromMap.size() - 1);
+        appendUnitAndValueWithCommonSeparator(readableDate, humanReadableDate);
+        humanReadableDate.append(FINAL_SEPARATOR);
+        appendUnitAndValue(readableDate, humanReadableDate, unitsFromMap.size() - 1);
 
-        return stringBuilder.toString();
+        return humanReadableDate.toString();
     }
 
-    private static void appendUnitAndValueWithCommonSeparator(Map<Units, Integer> readableDate, StringBuilder stringBuilder) {
+    private static void appendUnitAndValueWithCommonSeparator(Map<Units, Integer> readableDate, StringBuilder humanReadableDate) {
         List<Units> unitsFromMap = getUnitsFromMap(readableDate);
         for (int i = 0; i < unitsFromMap.size() - 1; i++) {
-            appendUnitAndValue(readableDate, stringBuilder, i);
-            appendCommonSeparator(unitsFromMap, stringBuilder, i);
+            appendUnitAndValue(readableDate, humanReadableDate, i);
+            appendCommonSeparator(unitsFromMap, humanReadableDate, i);
         }
     }
 
-    private static List<Units> getUnitsFromMap(Map<Units, Integer> map) {
-        return map.keySet().stream().toList();
+    private static List<Units> getUnitsFromMap(Map<Units, Integer> readableDate) {
+        return readableDate.keySet().stream().toList();
     }
 
-    private static void appendUnitAndValue(Map<Units, Integer> readableDate, StringBuilder stringBuilder, int indexOfUnit) {
+    private static void appendUnitAndValue(Map<Units, Integer> readableDate, StringBuilder humanReadableDate, int indexOfUnit) {
         List<Units> unitsFromMap = getUnitsFromMap(readableDate);
-        stringBuilder.append(String.format("%d %s", readableDate.get(unitsFromMap.get(indexOfUnit)),
+        humanReadableDate.append(String.format("%d %s", readableDate.get(unitsFromMap.get(indexOfUnit)),
                 (readableDate.get(unitsFromMap.get(indexOfUnit)) == 1) ? unitsFromMap.get(indexOfUnit)
                         .getNameOfTheUnit() : unitsFromMap.get(indexOfUnit).getNameOfTheUnit() + THE_SING_OF_THE_PLURAL));
     }
 
-    private static void appendCommonSeparator(List<Units> units, StringBuilder stringBuilder, int indexOfUnit) {
-        if (indexOfUnit < units.size() - 2) {
-            stringBuilder.append(COMMON_SEPARATOR);
+    private static void appendCommonSeparator(List<Units> unitsFromMap, StringBuilder humanReadableDate, int indexOfUnit) {
+        if (indexOfUnit < unitsFromMap.size() - 2) {
+            humanReadableDate.append(COMMON_SEPARATOR);
         }
     }
 
-    private static void appendIfOnlyOneUnitValuePairInTheMap(Map<Units, Integer> readableDate, StringBuilder stringBuilder) {
+    private static void appendIfOnlyOneUnitValuePairInTheMap(Map<Units, Integer> readableDate, StringBuilder humanReadableDate) {
         List<Units> unitsFromMap = getUnitsFromMap(readableDate);
         if (unitsFromMap.size() == 1) {
-            appendUnitAndValue(readableDate, stringBuilder, 0);
+            appendUnitAndValue(readableDate, humanReadableDate, 0);
         }
     }
 }

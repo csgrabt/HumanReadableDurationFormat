@@ -20,7 +20,7 @@ public class TimeConverterUtils {
         return readableDate;
     }
 
-    //The highest unit means the unit, where the convertNumberToSecond  is the highest.
+    //The highest unit means the unit, where the convertNumberToSecond is the highest.
     private static void calculateTheValueOfTheHighestUnit(Map<Units, Integer> readableDate, int numberToBeConverted) {
         int numberOfYear = numberToBeConverted / UNITS.get(0).getConvertNumberToSecond();
         putTheUnitAndTheValueToTheMap(readableDate, 0, numberOfYear);
