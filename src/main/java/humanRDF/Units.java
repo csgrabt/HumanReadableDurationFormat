@@ -1,6 +1,7 @@
 package humanRDF;
 
 public enum Units {
+    //The enums have to be in revers order based on the attribute of convertNumberOfSecond
     YEAR("year", 31_536_000), DAY("day", 86400), HOUR("hour", 3600),
     MINUTE("minute", 60), SECOND("second", 1);
 

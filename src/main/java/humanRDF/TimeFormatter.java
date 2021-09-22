@@ -14,19 +14,17 @@ public class TimeFormatter {
 
     public static final String COMMON_SEPARATOR = ", ";
     public static final String FINAL_SEPARATOR = " and ";
-    public static final String THE_NUMBER_OF_SECOND_IS_ZERO = "now";
+    public static final String MESSAGE_NOW = "now";
+    public static final String THE_SING_OF_THE_PLURAL = "s";
 
     private TimeFormatter() {
-        throw new IllegalStateException("(Utility class");
+        throw new IllegalStateException("Utility class");
     }
 
     public static String formatDuration(int numberToBeConverted) {
         validate(numberToBeConverted);
-
-        if (isTheNumberToBeConvertedZero(numberToBeConverted)) return THE_NUMBER_OF_SECOND_IS_ZERO;
-
+        if (isTheNumberToBeConvertedZero(numberToBeConverted)) return MESSAGE_NOW;
         Map<Units, Integer> readableDate = getTheDateInAMap(numberToBeConverted);
-
         return toStringFromMap(readableDate);
     }
 
@@ -35,30 +33,31 @@ public class TimeFormatter {
     }
 
 
-    private static void validate(int i) {
-        if (i < 0) {
+    private static void validate(int numberToBeConverted) {
+        if (numberToBeConverted < 0) {
             throw new IllegalTimeFormatException("Time cannot be negative!");
         }
     }
 
-    private static String toStringFromMap(Map<Units, Integer> map) {
+    private static String toStringFromMap(Map<Units, Integer> readableDate) {
         StringBuilder stringBuilder = new StringBuilder();
-        List<Units> unitsFromMap = getUnitsFromMap(map);
-        String justOneValueIsNotZero = oneUnitOnly(map, stringBuilder);
+        List<Units> unitsFromMap = getUnitsFromMap(readableDate);
+        appendIfOnlyOneUnitValuePairInTheMap(readableDate, stringBuilder);
         if (!stringBuilder.isEmpty()) {
-            return justOneValueIsNotZero;
+            return stringBuilder.toString();
         }
-        appendUnitWithCommonSeparator(map, stringBuilder, unitsFromMap);
+        appendUnitAndValueWithCommonSeparator(readableDate, stringBuilder);
         stringBuilder.append(FINAL_SEPARATOR);
-        appendUnit(map, stringBuilder, unitsFromMap.size() - 1);
+        appendUnitAndValue(readableDate, stringBuilder, unitsFromMap.size() - 1);
 
         return stringBuilder.toString();
     }
 
-    private static void appendUnitWithCommonSeparator(Map<Units, Integer> map, StringBuilder stringBuilder, List<Units> fromMap) {
-        for (int i = 0; i < fromMap.size() - 1; i++) {
-            appendUnit(map, stringBuilder, i);
-            appendCommonSeparator(fromMap, stringBuilder, i);
+    private static void appendUnitAndValueWithCommonSeparator(Map<Units, Integer> readableDate, StringBuilder stringBuilder) {
+        List<Units> unitsFromMap = getUnitsFromMap(readableDate);
+        for (int i = 0; i < unitsFromMap.size() - 1; i++) {
+            appendUnitAndValue(readableDate, stringBuilder, i);
+            appendCommonSeparator(unitsFromMap, stringBuilder, i);
         }
     }
 
@@ -66,11 +65,11 @@ public class TimeFormatter {
         return map.keySet().stream().toList();
     }
 
-    private static void appendUnit(Map<Units, Integer> map, StringBuilder stringBuilder, int indexOfUnit) {
-        List<Units> unitsFromMap = getUnitsFromMap(map);
-        stringBuilder.append(String.format("%d %s", map.get(unitsFromMap.get(indexOfUnit)),
-                (map.get(unitsFromMap.get(indexOfUnit)) == 1) ? unitsFromMap.get(indexOfUnit)
-                        .getNameOfTheUnit() : unitsFromMap.get(indexOfUnit).getNameOfTheUnit() + "s"));
+    private static void appendUnitAndValue(Map<Units, Integer> readableDate, StringBuilder stringBuilder, int indexOfUnit) {
+        List<Units> unitsFromMap = getUnitsFromMap(readableDate);
+        stringBuilder.append(String.format("%d %s", readableDate.get(unitsFromMap.get(indexOfUnit)),
+                (readableDate.get(unitsFromMap.get(indexOfUnit)) == 1) ? unitsFromMap.get(indexOfUnit)
+                        .getNameOfTheUnit() : unitsFromMap.get(indexOfUnit).getNameOfTheUnit() + THE_SING_OF_THE_PLURAL));
     }
 
     private static void appendCommonSeparator(List<Units> units, StringBuilder stringBuilder, int indexOfUnit) {
@@ -79,13 +78,11 @@ public class TimeFormatter {
         }
     }
 
-    private static String oneUnitOnly(Map<Units, Integer> map, StringBuilder stringBuilder) {
-        List<Units> unitsFromMap = getUnitsFromMap(map);
+    private static void appendIfOnlyOneUnitValuePairInTheMap(Map<Units, Integer> readableDate, StringBuilder stringBuilder) {
+        List<Units> unitsFromMap = getUnitsFromMap(readableDate);
         if (unitsFromMap.size() == 1) {
-            appendUnit(map, stringBuilder, 0);
+            appendUnitAndValue(readableDate, stringBuilder, 0);
         }
-
-        return stringBuilder.toString();
     }
 }
 
