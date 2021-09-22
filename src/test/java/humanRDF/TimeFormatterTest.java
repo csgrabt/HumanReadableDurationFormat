@@ -58,7 +58,7 @@ class TimeFormatterTest {
         assertEquals("1 hour, 1 minute and 2 seconds", TimeFormatter.formatDuration(3662));
         assertEquals("2 years, 10 days, 3 hours, 45 minutes and 25 seconds", TimeFormatter.formatDuration(63_949_525));
         assertEquals("2 years and 1 second", TimeFormatter.formatDuration(63_072_000 + 1));
-
+        assertEquals("1 year and 2 seconds", TimeFormatter.formatDuration(31_536_002));
     }
 
 }
