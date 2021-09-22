@@ -7,18 +7,21 @@ https://www.codewars.com/kata/human-readable-duration-format?utm_source=newslett
 
 import java.util.*;
 
-import static humanRDF.TimeConverter.getTheDateInAMap;
+import static humanRDF.TimeConverterUtils.getTheDateInAMap;
 
 
 public class TimeFormatter {
 
-    public final static String COMMON_REGEX = ", ";
-    public final static String FINAL_REGEX = " and ";
-    public final static String THE_NUMBER_OF_SECOND_IS_ZERO = "now";
+    public static final String COMMON_SEPARATOR = ", ";
+    public static final String FINAL_SEPARATOR = " and ";
+    public static final String THE_NUMBER_OF_SECOND_IS_ZERO = "now";
 
+    private TimeFormatter() {
+        throw new IllegalStateException("(Utility class");
+    }
 
     public static String formatDuration(int numberToBeConverted) {
-        validator(numberToBeConverted);
+        validate(numberToBeConverted);
 
         if (isTheNumberToBeConvertedZero(numberToBeConverted)) return THE_NUMBER_OF_SECOND_IS_ZERO;
 
@@ -32,7 +35,7 @@ public class TimeFormatter {
     }
 
 
-    private static void validator(int i) {
+    private static void validate(int i) {
         if (i < 0) {
             throw new IllegalTimeFormatException("Time cannot be negative!");
         }
@@ -45,17 +48,17 @@ public class TimeFormatter {
         if (!stringBuilder.isEmpty()) {
             return justOneValueIsNotZero;
         }
-        appendUnitWithCommonRegex(map, stringBuilder, unitsFromMap);
-        stringBuilder.append(FINAL_REGEX);
+        appendUnitWithCommonSeparator(map, stringBuilder, unitsFromMap);
+        stringBuilder.append(FINAL_SEPARATOR);
         appendUnit(map, stringBuilder, unitsFromMap.size() - 1);
 
         return stringBuilder.toString();
     }
 
-    private static void appendUnitWithCommonRegex(Map<Units, Integer> map, StringBuilder stringBuilder, List<Units> fromMap) {
+    private static void appendUnitWithCommonSeparator(Map<Units, Integer> map, StringBuilder stringBuilder, List<Units> fromMap) {
         for (int i = 0; i < fromMap.size() - 1; i++) {
             appendUnit(map, stringBuilder, i);
-            appendCommonRegex(fromMap, stringBuilder, i);
+            appendCommonSeparator(fromMap, stringBuilder, i);
         }
     }
 
@@ -70,9 +73,9 @@ public class TimeFormatter {
                         .getNameOfTheUnit() : unitsFromMap.get(indexOfUnit).getNameOfTheUnit() + "s"));
     }
 
-    private static void appendCommonRegex(List<Units> units, StringBuilder stringBuilder, int indexOfUnit) {
+    private static void appendCommonSeparator(List<Units> units, StringBuilder stringBuilder, int indexOfUnit) {
         if (indexOfUnit < units.size() - 2) {
-            stringBuilder.append(COMMON_REGEX);
+            stringBuilder.append(COMMON_SEPARATOR);
         }
     }
 

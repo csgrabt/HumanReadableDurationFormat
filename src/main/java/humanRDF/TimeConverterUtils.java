@@ -5,20 +5,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class TimeConverter {
+public class TimeConverterUtils {
 
-    private final static List<Units> UNITS = Arrays.stream(Units.values()).toList();
+    private TimeConverterUtils() {
+        throw new IllegalStateException("(Utility class");
+    }
+
+    private static final List<Units> UNITS = Arrays.stream(Units.values()).toList();
 
     public static Map<Units, Integer> getTheDateInAMap(int numberToBeConverted) {
         Map<Units, Integer> readableDate = new TreeMap<>();
-        calculateNumberOfYear(readableDate, numberToBeConverted);
+        calculateTheValueOfTheHighestUnit(readableDate, numberToBeConverted);
         for (int i = 1; i < UNITS.size(); i++) {
             calculateTheValueOfTheUnit(numberToBeConverted, readableDate, i);
         }
         return readableDate;
     }
 
-    private static void calculateNumberOfYear(Map<Units, Integer> readableDate, int numberToBeConverted) {
+    private static void calculateTheValueOfTheHighestUnit(Map<Units, Integer> readableDate, int numberToBeConverted) {
         int numberOfYear = numberToBeConverted / UNITS.get(0).getConvertNumberToSecond();
         putTheValueToTheMap(readableDate, 0, numberOfYear);
     }
