@@ -12,7 +12,7 @@ public class TimeConverterUtils {
 
 
     public static Map<Units, Integer> getTheDateInAMap(int numberToBeConverted) {
-        Map<Units, Integer> readableDate = new TreeMap<>();
+        Map<Units, Integer> readableDate = new EnumMap<>(Units.class);
         calculateTheValueOfTheHighestUnit(readableDate, numberToBeConverted);
         for (int i = 1; i < UNITS.size(); i++) {
             calculateTheValueOfTheUnit(numberToBeConverted, readableDate, i);
